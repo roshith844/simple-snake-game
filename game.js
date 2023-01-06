@@ -16,6 +16,8 @@ var snakeBody = [];
 var foodX = blockSize * 10;
 var FoodY = blockSize * 10;
 
+var gameOver = false;
+
 window.onload = function () {
   board = document.getElementById("board");
   board.height = rows * blockSize;
@@ -27,6 +29,9 @@ window.onload = function () {
   setInterval(update, 1000 / 10); //1
 };
 function update() {
+  if (gameOver) {
+    return;
+  }
   context.fillStyle = "black";
   context.fillRect(0, 0, board.width, board.height);
 
@@ -48,6 +53,22 @@ function update() {
   context.fillRect(snakeX, snakeY, blockSize, blockSize);
   for (let i = 0; i < snakeBody.length; i++) {
     context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+  }
+  // conditions for game ending
+  if (
+    snakeX < 0 ||
+    snakeX > cols * blockSize ||
+    snakeY < 0 ||
+    snakeY > rows * blockSize
+  ) {
+    gameOver = true;
+    alert("game over");
+  }
+  for (let i = 0; i < snakeBody.length; i++) {
+    if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
+      gameOver = true;
+      alert("game over");
+    }
   }
 }
 
