@@ -17,19 +17,41 @@ var foodX = blockSize * 10;
 var FoodY = blockSize * 10;
 
 var gameOver = false;
+var restartButton;
+
+function initGame() {
+  snakeX = blockSize * 5;
+  snakeY = blockSize * 5;
+  velocityX = 0;
+  velocityY = 0;
+  snakeBody = [];
+  gameOver = false;
+  placeFood();
+  if (restartButton) {
+    restartButton.style.display = 'none';
+  }
+}
 
 window.onload = function () {
   board = document.getElementById("board");
+  restartButton = document.getElementById("restartButton");
   board.height = rows * blockSize;
   board.width = cols * blockSize;
   context = board.getContext("2d");
-  placeFood();
+  
+  restartButton.addEventListener('click', function() {
+    initGame();
+  });
+  
+  initGame();
   document.addEventListener("keyup", changeDirection);
-  //   update();
-  setInterval(update, 1000 / 10); //1
+  setInterval(update, 1000 / 10);
 };
 function update() {
   if (gameOver) {
+    if (restartButton) {
+      restartButton.style.display = 'block';
+    }
     return;
   }
   context.fillStyle = "black";
@@ -57,24 +79,22 @@ function update() {
   // conditions for game ending
   if (
     snakeX < 0 ||
-    snakeX > cols * blockSize ||
+    snakeX >= cols * blockSize ||
     snakeY < 0 ||
-    snakeY > rows * blockSize
+    snakeY >= rows * blockSize
   ) {
     gameOver = true;
-    alert("game over");
   }
   for (let i = 0; i < snakeBody.length; i++) {
     if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
       gameOver = true;
-      alert("game over");
     }
   }
 }
 
 function placeFood() {
   foodX = Math.floor(Math.random() * cols) * blockSize;
-  foodX = Math.floor(Math.random() * rows) * blockSize;
+  FoodY = Math.floor(Math.random() * rows) * blockSize;
 }
 function changeDirection(e) {
   if (e.code == "ArrowUp" && velocityY != 1) {
