@@ -18,6 +18,7 @@ var FoodY = blockSize * 10;
 
 var gameOver = false;
 var score = 0;
+var highScore = parseInt(localStorage.getItem("snakeHighScore")) || 0;
 var restartButton;
 
 function initGame() {
@@ -30,6 +31,9 @@ function initGame() {
   score = 0;
   if (document.getElementById("score")) {
     document.getElementById("score").innerText = score;
+  }
+  if (document.getElementById("highScore")) {
+    document.getElementById("highScore").innerText = highScore;
   }
   placeFood();
   if (restartButton) {
@@ -68,6 +72,11 @@ function update() {
     snakeBody.push([foodX, FoodY]);
     score += 10;
     document.getElementById("score").innerText = score;
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem("snakeHighScore", highScore);
+      document.getElementById("highScore").innerText = highScore;
+    }
     placeFood();
   }
   for (let i = snakeBody.length - 1; i > 0; i--) {
